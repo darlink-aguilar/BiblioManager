@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BiblioManager.API/BiblioManager.API.csproj" />
+  <Project Path="BiblioManager.DataAccess/BiblioManager.DataAccess.csproj" />
+  <Project Path="BiblioManager.Domain/BiblioManager.Domain.csproj" />
+</Solution>
