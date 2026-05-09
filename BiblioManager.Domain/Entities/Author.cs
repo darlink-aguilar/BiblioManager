@@ -1,6 +1,5 @@
-﻿using System.Numerics;
+﻿namespace BiblioManager.Domain.Entities
 
-namespace BiblioManager.Domain.Entities
 {
     public class Author : AuditBase
     {

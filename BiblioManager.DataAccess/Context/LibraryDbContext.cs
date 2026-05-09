@@ -12,6 +12,7 @@ namespace BiblioManager.DataAccess.Context
 
         // Un DbSet<T> representa una tabla en la base de datos.
         public DbSet<Author> Authors => Set<Author>();
+        public DbSet<Member> Members => Set<Member>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,30 @@ namespace BiblioManager.DataAccess.Context
                       .IsRequired();
                 entity.Property(a => a.UpdatedAt)
                       .IsRequired(false); 
+            });
+
+            // ── Member Configuration ──
+            modelBuilder.Entity<Member>(entity =>
+            {
+                entity.HasKey(m => m.Id); 
+                entity.Property(m => m.Dni)
+                      .IsRequired() 
+                      .HasMaxLength(10); 
+                entity.Property(m => m.FullName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.Property(m => m.Email)
+                      .IsRequired()
+                      .HasMaxLength(60);
+                entity.Property(m => m.BirthDate);
+                entity.Property(m => m.IsActive)
+                      .IsRequired();
+                entity.Property(m => m.CreatedAt)
+                      .IsRequired();
+                entity.Property(m => m.UpdatedAt)
+                      .IsRequired(false);
+                entity.HasIndex(m => m.Dni) // Aseguramos que el DNI sea único en la base de datos
+                      .IsUnique(); 
             });
         }
     }
