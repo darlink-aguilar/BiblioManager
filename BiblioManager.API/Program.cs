@@ -21,6 +21,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 // ── Services ──
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // ── AutoMapper ──
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
