@@ -14,6 +14,14 @@ namespace BiblioManager.API.Mappings
             // Author mappings
             CreateMap<AuthorRequestDTO, Author>();
             CreateMap<Author, AuthorResponseDTO>();
+
+            // Member mappings
+            CreateMap<MemberRequestDTO, Member>();
+            CreateMap<Member, MemberResponseDTO>();
+
+            // Category mappings
+            CreateMap<CategoryRequestDTO, Category>();
+            CreateMap<Category, CategoryResponseDTO>();
         }
     }
 }

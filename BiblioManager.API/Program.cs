@@ -15,6 +15,8 @@ builder.Services.AddDbContext<LibraryDbContext>(options =>
 // ── Repositories ──
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 
 // ── Services ──
