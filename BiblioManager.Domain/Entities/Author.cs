@@ -9,6 +9,6 @@
         public DateTime? BirthDate { get; set; } // No es obligatorio
 
         // Navigation Property
-        //public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+        public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
     }
 }

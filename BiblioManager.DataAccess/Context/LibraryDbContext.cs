@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using BiblioManager.Domain.Entities;
+﻿using BiblioManager.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace BiblioManager.DataAccess.Context
 {
@@ -14,6 +15,8 @@ namespace BiblioManager.DataAccess.Context
         public DbSet<Author> Authors => Set<Author>();
         public DbSet<Member> Members => Set<Member>();
         public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Book> Books => Set<Book>();
+        public DbSet<BookAuthor> BookAuthors => Set<BookAuthor>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -84,6 +87,44 @@ namespace BiblioManager.DataAccess.Context
                 entity.HasIndex(c => c.Name) // Aseguramos que el nombre sea único en la base de datos
                       .IsUnique();
             });
+
+            // ── Book Configuration ──
+            modelBuilder.Entity<Book>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+                entity.Property(b => b.Isbn)
+                      .IsRequired()
+                      .HasMaxLength(17);
+                entity.Property(b => b.Title)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.Property(b => b.Synopsis)
+                      .IsRequired()
+                      .HasMaxLength(900);
+                entity.Property(b => b.PublicationDate);
+                entity.Property(b => b.CreatedAt)
+                      .IsRequired();
+                entity.Property(b => b.UpdatedAt)
+                      .IsRequired(false);
+
+                // Relación 1:N con Category
+                entity.HasOne(b => b.Category) // Un libro tiene una categoría
+                      .WithMany(c => c.Books) // Una categoría tiene muchos libros
+                      .HasForeignKey(b => b.CategoryId) // La clave foránea en la tabla de Libros que apunta a categoria
+                      .OnDelete(DeleteBehavior.Restrict); // No se puede eliminar una categoría si tiene libros asociados
+
+                // Indice único
+                entity.HasIndex(b => b.Isbn)
+                      .IsUnique();
+
+                // Indice unico compuesto
+                entity.HasIndex(b => new { b.Title, b.PublicationDate })
+                      .IsUnique();
+
+            });
+
+            // ── BookAuthor Configuration ──
+            //FALTAAAAA
         }
     }
 }

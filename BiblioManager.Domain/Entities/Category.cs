@@ -8,6 +8,6 @@
 
         // Navigation Property
 
-        //public ICollection<Book> Books { get; set; } = new List<Book>();
+        public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }
