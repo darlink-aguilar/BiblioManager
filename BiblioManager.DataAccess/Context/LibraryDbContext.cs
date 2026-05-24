@@ -116,15 +116,34 @@ namespace BiblioManager.DataAccess.Context
                 // Indice único
                 entity.HasIndex(b => b.Isbn)
                       .IsUnique();
-
-                // Indice unico compuesto
-                entity.HasIndex(b => new { b.Title, b.PublicationDate })
-                      .IsUnique();
-
             });
 
             // ── BookAuthor Configuration ──
-            //FALTAAAAA
+            modelBuilder.Entity<BookAuthor>(entity =>
+            {
+                entity.HasKey(ba => ba.Id);
+                entity.Property(ba => ba.CreatedAt)
+                      .IsRequired();
+                entity.Property(ba => ba.UpdatedAt)
+                      .IsRequired(false);
+
+                // Relación con Book
+                entity.HasOne(ba => ba.Book) // Un registro de BookAuthor tiene un libro
+                      .WithMany(b => b.BookAuthors) // Un libro tiene muchos registros de BookAuthor
+                      .HasForeignKey(ba => ba.BookId) // La clave foránea en la tabla de BookAuthor que apunta al libro
+                      .OnDelete(DeleteBehavior.Cascade); // Si se borra un libro, se borran sus registros de BookAuthor
+
+                // Relación con Author
+                entity.HasOne(ba => ba.Author) // Un registro de BookAuthor tiene un autor
+                      .WithMany(a => a.BookAuthors) // Un autor tiene muchos registros de BookAuthor
+                      .HasForeignKey(ba => ba.AuthorId) // La clave foránea en la tabla de BookAuthor que apunta al autor
+                      .OnDelete(DeleteBehavior.Cascade); // Si se borra un autor, se borran sus registros de BookAuthor
+                     
+                
+                // Índice único compuesto: un autor solo una vez por libro
+                entity.HasIndex(ba => new { ba.BookId, ba.AuthorId })
+                      .IsUnique();
+            });
         }
     }
 }

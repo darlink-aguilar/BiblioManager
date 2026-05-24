@@ -6,8 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BiblioManager.Domain.Services;
 
-public class MemberService : IMemberService
-// SE REPITE EL METODO DE VALIDACION DE EMAIL 
+public class MemberService : IMemberService 
 
 {
     private readonly IMemberRepository _memberRepository;
