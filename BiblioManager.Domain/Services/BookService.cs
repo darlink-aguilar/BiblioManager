@@ -42,7 +42,6 @@ public class BookService : IBookService
     {
         // validaciones
         // 1. Validar ISBN único
-        // QUEDE AQUI 
         var existingBook = await _bookRepository.GetByIsbnAsync(book.Isbn);
         if (existingBook != null)
         {
@@ -61,27 +60,17 @@ public class BookService : IBookService
             throw new KeyNotFoundException($"No se encontró el libro con ID {id}");
         }
 
-        // Validar que si cambia el ISBN, no choque con el de otro libro
+        // Validar que si cambia el ISBN
         var repeatedIsbn = await _bookRepository.GetByIsbnAsync(book.Isbn);
         if (repeatedIsbn != null && repeatedIsbn.Id != id)
         {
             throw new InvalidOperationException($"El ISBN '{book.Isbn}' ya pertenece a otro libro.");
         }
 
-        // Si el StockTotal cambia, ajustar las copias disponibles de manera coherente
-        int diferenciaStock = book.StockTotal - existing.StockTotal;
-        existing.AvailableCopies += diferenciaStock;
-
-        if (existing.AvailableCopies < 0)
-        {
-            throw new InvalidOperationException("No se puede reducir el stock total porque hay demasiadas copias prestadas actualmente");
-        }
-
-        existing.Title = book.Title;
         existing.Isbn = book.Isbn;
+        existing.Title = book.Title;
         existing.Synopsis = book.Synopsis;
         existing.PublicationDate = book.PublicationDate;
-        existing.StockTotal = book.StockTotal;
 
         _logger.LogInformation("Updating book with ID: {BookId}", id);
         await _bookRepository.UpdateAsync(existing);
@@ -93,16 +82,13 @@ public class BookService : IBookService
         if (existing == null)
             throw new KeyNotFoundException($"No se encontró el libro con ID {id}");
 
-        // Aquí podrías validar si el libro tiene préstamos activos antes de borrarlo o desactivarlo
-
         _logger.LogInformation("Deleting book with ID: {BookId}", id);
         await _bookRepository.DeleteAsync(id);
     }
 
-    // ── MÉTODOS DE LA RELACIÓN MUCHOS A MUCHOS (Adaptados de RegisterTeamAsync) ──
-
     public async Task AddAuthorToBookAsync(int bookId, int authorId)
     {
+        // VALIDACIONES
         // 1. Validar que el libro existe
         var bookExists = await _bookRepository.ExistsAsync(bookId);
         if (!bookExists)
@@ -113,7 +99,7 @@ public class BookService : IBookService
         if (!authorExists)
             throw new KeyNotFoundException($"No se encontró el autor con ID {authorId}");
 
-        // 3. Validar que no esté ya asociado (Evita duplicados)
+        // 3. Validar que no esté ya asociado
         var existingAssociation = await _bookAuthorRepository.GetByBookAndAuthorAsync(bookId, authorId);
         if (existingAssociation != null)
         {
@@ -133,6 +119,7 @@ public class BookService : IBookService
 
     public async Task RemoveAuthorFromBookAsync(int bookId, int authorId)
     {
+        // Validar que exista este registro
         var association = await _bookAuthorRepository.GetByBookAndAuthorAsync(bookId, authorId);
         if (association == null)
         {
@@ -151,7 +138,6 @@ public class BookService : IBookService
 
         var bookAuthors = await _bookAuthorRepository.GetByBookAsync(bookId);
 
-        // Mapeamos de la entidad intermedia a la entidad final (Author)
         return bookAuthors.Select(ba => ba.Author);
     }
 }

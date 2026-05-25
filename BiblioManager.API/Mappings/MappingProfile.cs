@@ -22,6 +22,13 @@ namespace BiblioManager.API.Mappings
             // Category mappings
             CreateMap<CategoryRequestDTO, Category>();
             CreateMap<Category, CategoryResponseDTO>();
+
+            // Book mappings
+            CreateMap<BookRequestDTO, Book>();
+            CreateMap<Book, BookResponseDTO>()
+                .ForMember(
+                    dest => dest.CategoryName,
+                    opt => opt.MapFrom(src => src.Category.Name));
         }
     }
 }
