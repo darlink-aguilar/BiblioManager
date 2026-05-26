@@ -10,6 +10,6 @@
         public bool IsActive { get; set; } = true; // Campo obligatorio, valor por defecto true
 
         // Navigation Property
-        //public ICollection<Loan> Loans { get; set; } = new List<Loan>();
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

@@ -17,6 +17,7 @@ namespace BiblioManager.DataAccess.Context
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Book> Books => Set<Book>();
         public DbSet<BookAuthor> BookAuthors => Set<BookAuthor>();
+        public DbSet<Loan> Loans => Set<Loan>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -143,6 +144,36 @@ namespace BiblioManager.DataAccess.Context
                 // Índice único compuesto: un autor solo una vez por libro
                 entity.HasIndex(ba => new { ba.BookId, ba.AuthorId })
                       .IsUnique();
+            });
+
+            // ── Loan Configuration ──
+            modelBuilder.Entity<Loan>(entity =>
+            {
+                entity.HasKey(l => l.Id);
+                entity.Property(l => l.LoanDate)
+                      .IsRequired();
+                entity.Property(l => l.DueDate)
+                      .IsRequired();
+                entity.Property(l => l.ReturnDate)
+                      .IsRequired(false);
+                entity.Property(l => l.Status)
+                      .IsRequired();
+                entity.Property(l => l.CreatedAt)
+                      .IsRequired();
+                entity.Property(l => l.UpdatedAt)
+                      .IsRequired(false);
+
+                // Relación con Book
+                entity.HasOne(l => l.Book) // Un registro de Loan tiene un libro
+                      .WithMany(b => b.Loans) // Un libro tiene muchos registros de Loan
+                      .HasForeignKey(l => l.BookId) // La clave foránea en la tabla de Loan que apunta al libro
+                      .OnDelete(DeleteBehavior.Restrict); // Protege el historial de la biblioteca
+
+                // Relación con Member
+                entity.HasOne(l => l.Member) // Un registro de Loan tiene un usuario
+                      .WithMany(m => m.Loans) // Un usuario tiene muchos registros de Loan
+                      .HasForeignKey(l => l.MemberId) // La clave foránea en la tabla de Loan que apunta al usuario
+                      .OnDelete(DeleteBehavior.Restrict); // Protege el historial de la biblioteca
             });
         }
     }

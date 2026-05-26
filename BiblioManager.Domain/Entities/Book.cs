@@ -14,6 +14,6 @@
         // Navigation Property
         public Category Category { get; set; } = null!;
         public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
-        //public ICollection<Loan> Loans { get; set; } = new List<Loan>();
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

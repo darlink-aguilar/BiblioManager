@@ -13,16 +13,13 @@ public class MemberController : ControllerBase
 {
     private readonly IMemberService _memberService;
     private readonly IMapper _mapper;
-    private readonly ILogger<MemberController> _logger;
 
     public MemberController(
         IMemberService memberService,
-        IMapper mapper,
-        ILogger<MemberController> logger)
+        IMapper mapper)
     {
         _memberService = memberService;
         _mapper = mapper;
-        _logger = logger;
     }
 
     [HttpGet]

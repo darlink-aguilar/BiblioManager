@@ -29,6 +29,16 @@ namespace BiblioManager.API.Mappings
                 .ForMember(
                     dest => dest.CategoryName,
                     opt => opt.MapFrom(src => src.Category.Name));
+
+            // Loan mappings
+            CreateMap<LoanRequestDTO, Loan>();
+            CreateMap<Loan, LoanResponseDTO>()
+                .ForMember(
+                    dest => dest.MemberName,
+                    opt => opt.MapFrom(src => src.Member.FullName))
+                .ForMember(
+                    dest => dest.BookName,
+                    opt => opt.MapFrom(src => src.Book.Title));
         }
     }
 }
