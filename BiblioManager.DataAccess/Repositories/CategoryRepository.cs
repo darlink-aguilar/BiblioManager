@@ -17,9 +17,9 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
                 c.Name.ToLower() == name.ToLower());
     }
 
-    //public async Task<bool> HasBooksAsync(int categoryId)
-    //{
-    //    return await _dbSet
-    //        .AnyAsync(c => c.Id == categoryId && c.Books.Any());
-    //}
+    public async Task<bool> HasBooksAsync(int categoryId)
+    {
+        return await _dbSet
+            .AnyAsync(c => c.Id == categoryId && c.Books.Any());
+    }
 }

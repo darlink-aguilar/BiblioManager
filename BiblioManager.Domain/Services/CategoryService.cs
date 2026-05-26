@@ -86,13 +86,13 @@ public class CategoryService : ICategoryService
         }
 
         // VALIDACION: No borrar si tiene libros
-        //var hasBooks = await _categoryRepository.HasBooksAsync(id);
-        //if (hasBooks)
-        //{
-        //    _logger.LogWarning("Attempted to delete Category {CategoryId} that has books associated", id);
-        //    throw new InvalidOperationException("No se puede eliminar la categoría porque tiene libros asociados.");
-        //}
-       
+        var hasBooks = await _categoryRepository.HasBooksAsync(id);
+        if (hasBooks)
+        {
+            _logger.LogWarning("Attempted to delete Category {CategoryId} that has books associated", id);
+            throw new InvalidOperationException("No se puede eliminar la categoría porque tiene libros asociados.");
+        }
+
         _logger.LogInformation("Deleting Category with ID: {CategoryId}", id);
         await _categoryRepository.DeleteAsync(id);
     }
