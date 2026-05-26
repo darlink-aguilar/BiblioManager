@@ -13,16 +13,13 @@ public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
     private readonly IMapper _mapper;
-    private readonly ILogger<CategoryController> _logger;
 
     public CategoryController(
         ICategoryService categoryService,
-        IMapper mapper,
-        ILogger<CategoryController> logger)
+        IMapper mapper)
     {
         _categoryService = categoryService;
         _mapper = mapper;
-        _logger = logger;
     }
 
     [HttpGet]
@@ -91,7 +88,6 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("HTTP DELETE: Attempting to delete category with ID {Id}", id);
             await _categoryService.DeleteAsync(id);
             return NoContent();
         }
